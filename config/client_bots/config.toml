@@ -1,0 +1,27 @@
+# config.toml
+
+title = "clientBots_config"
+
+debug = true
+log_level = "info"
+
+heart_beat = "5s"
+
+#prompt ui
+prompt_ui = false
+
+# tls config
+cert_path_debug = "config/cert/localhost.crt"
+key_path_debug = "config/cert/localhost.key"
+
+cert_path_release = "config/cert/hellodudu.crt"
+key_path_release = "config/cert/hellodudu.key"
+
+client_bots_num = 1
+
+# http
+http_listen_addr = ":8083"
+
+gate_endpoints = [
+"https://localhost/select_game_addr",
+]
