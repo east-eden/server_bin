@@ -31,7 +31,7 @@ services:
     depends_on:
       - "consul"
       # - "nsqd"
-      - "loki"
+      # - "loki"
       - "mongo"
     # logging:
     #   driver: loki
@@ -65,7 +65,7 @@ services:
     depends_on:
       - "consul"
       # - "nsqd"
-      - "loki"
+      # - "loki"
       - "mongo"
     # logging:
     #   driver: loki
@@ -106,8 +106,8 @@ services:
       interval: 20s
       timeout: 1s
       retries: 20
-    depends_on:
-      - loki
+    # depends_on:
+    #   - loki
     # logging:
     #   driver: loki
     #   options:
@@ -124,8 +124,8 @@ services:
     volumes:
       - "./config/consul/:/config/consul/"
       - "./data/consul/:/consul_data"
-    depends_on:
-      - loki
+    # depends_on:
+    #   - loki
     # logging:
     #   driver: loki
     #   options:
