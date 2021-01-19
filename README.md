@@ -3,12 +3,15 @@
 
 ## 需要软件
 - **docker** [网页下载](https://www.docker.com/get-started)或者访问[share/Software/Docker](nas.diandian.info/Software/Docker/)安装
-- **git** [网页下载](https://tortoisegit.org)或者访问[share/Software/Git](nas.diandian.info/Software/Docker/)安装
+- **git** [网页下载](https://tortoisegit.org)或者访问[share/Software/Git](nas.diandian.info/Software/Docker/)安装，windows下需要安装`Git-2.30.0-64-bit.exe`、`TortoiseGit-2.11.0.0-64bit.msi`、`TortoiseGit-LanguagePack-2.11.0.0-64bit-zh_CN.msi`
 
 ## 下载服务器配置
 安装git后，在windows命令行或者mac终端中执行命令
 
-```git clone https://e.coding.net/mmstudio/blade/server_bin.git```
+```
+git clone https://e.coding.net/mmstudio/blade/server_bin.git
+docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+```
 
 然后进入`server_bin`目录中进行服务器相关脚本操作
 
