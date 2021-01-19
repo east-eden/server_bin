@@ -7,6 +7,7 @@ docker-compose down
 
 echo .
 echo 启动服务...
+docker login mmstudio-docker.pkg.coding.net
 docker-compose up -d
 
 echo .
