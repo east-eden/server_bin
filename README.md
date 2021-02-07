@@ -25,19 +25,19 @@
 1. 安装git后，在当前目录进入windows命令行或者mac终端，然后分别执行下面两条命令
 
     ```
-    git clone https://e.coding.net/mmstudio/blade/server_bin.git server
+    git clone https://bitbucket.org/east-eden/server_bin.git server
 
     docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
     ```
 
-    > 在首次执行`git clone`命令时会要求输入`coding.net`的账户和密码 ![](doc/image/self7.png)
+    > 在首次执行`git clone`命令时会要求输入`bitbucket.org`的账户和密码 ![](doc/image/self7.png)
 
 2. 进入`server`目录中进行服务器相关脚本操作
 
     * 开启服务器
 
         mac系统在目录下执行命令`./start_mac.sh`，win系统在目录下运行脚本`start_win.bat`
-        > 在首次开启服务器时，会拉取镜像包，拉取的时候也需要输入一次`coding.net`的账号密码 ![](doc/image/self8.png)
+        > 在首次开启服务器时，会拉取镜像包，拉取的时候也需要输入一次`bitbucket.org`的账号密码 ![](doc/image/self8.png)
 
         拉取完服务器后会自动开启服务，首次开启时会有`docker`映射磁盘的提示 ![](doc/image/self9.png)
 
