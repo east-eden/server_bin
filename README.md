@@ -1,13 +1,15 @@
 # 服务器自驾流程
 
 ## 需要软件
-- **MongoDB** [网页下载](https://www.mongodb.com/try/download/community?tck=docs_server)或者访问[share/Software/MongoDB](nas.diandian.info/Software/MongoDB/)安装
-- **MongoDB Compass** [网页下载](https://www.mongodb.com/try/download/compass?tck=docs_compass)或者访问[share/Software/MongoDB](nas.diandian.info/Software/MongoDB/)安装
+- **docker** [网页下载](https://www.docker.com/get-started)或者访问[share/Software/Docker](nas.diandian.info/Software/Docker/)安装
 - **git** [网页下载](https://tortoisegit.org)或者访问[share/Software/Git](nas.diandian.info/Software/Docker/)安装，windows下需要安装`Git-2.30.0-64-bit.exe`、`TortoiseGit-2.11.0.0-64bit.msi`、`TortoiseGit-LanguagePack-2.11.0.0-64bit-zh_CN.msi`
 
 ### 安装过程
-1. MongoDB 和 MongoDB Compass
-   * 在nas中安装`mongodb-windows-x86_64-4.4.4-signed`和`mongodb-compass-1.26.0-win32-x64`软件，一直默认选项下一步
+1. docker
+   * 在nas中安装对应系统的docker软件，安装完成后会提示重启: ![](doc/image/self1.png)
+   * 重启系统后会自动运行docker，第一次运行时如果出现以下提示时需要在`nas/Software/WSL/`中安装`wsl_update_x64.msi`: 
+    ![](doc/image/self2.png)
+    ![](doc/image/self3.png)
 
 2. git
    * 在nas中安装`nas/Software/Git/Git-2.30.0-64-bit.exe`，一路默认配置就行
@@ -20,17 +22,32 @@
 ----------------------
 
 ## 开启服务
-1. 安装git后，在当前目录进入windows命令行，然后执行下面命令
+1. 安装git后，在当前目录进入windows命令行或者mac终端，然后分别执行下面两条命令
 
     ```
-    git clone https://bitbucket.org/funplus/server_bin.git server_bin
+    git clone https://github.com/east-eden/server_bin.git server
+
+    docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
     ```
 
-    > 在首次执行`git clone`命令时会要求输入`bitbucket.org`的账户和密码 ![](doc/image/self7.png)
+    > 在首次执行`git clone`命令时会要求输入`github.com`的账户和密码 ![](doc/image/self7.png)
 
-2. 进入`server_bin`目录中进行服务器相关操作
+2. 进入`server`目录中进行服务器相关脚本操作
 
-    * 开启`gate`服务器: 进入`apps/gate`目录，运行`gate.exe`
-    * 开启`game`服务器: 进入`apps/game`目录，运行`game.exe`
+    * 开启服务器
 
-3. 运行客户端，进入`apps/client`目录，运行`client.exe` 
+        mac系统在目录下执行命令`./start_mac.sh`，win系统在目录下运行脚本`start_win.bat`
+        > 在首次开启服务器时，会拉取镜像包，拉取的时候也需要输入一次`github.com`的账号密码 ![](doc/image/self8.png)
+
+        拉取完服务器后会自动开启服务，首次开启时会有`docker`映射磁盘的提示 ![](doc/image/self9.png)
+
+        一切完毕后提示success，服务器即开启成功，可以运行测试客户端`apps/client/client.exe`来测试是否能和服务器通信，测试客户端使用jk作为上下方向键，回车选中命令![](doc/image/self10.png)
+
+    * 关闭服务器
+     
+        mac系统在目录下执行命令`./stop_mac.sh`，win系统在目录下运行脚本`stop_win.bat`
+
+    * 更新服务器
+
+        mac系统在目录下执行命令`./update_mac.sh`，win系统在目录下运行脚本`update_win.bat`
+
