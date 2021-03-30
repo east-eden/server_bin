@@ -1,0 +1,2 @@
+apps/gate/gate.exe filter=lfs diff=lfs merge=lfs -text
+apps/game/game.exe filter=lfs diff=lfs merge=lfs -text
