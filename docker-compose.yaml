@@ -49,6 +49,7 @@ services:
       - "./config/cert/:/app/server/config/cert"
       - "./config/excel/:/app/server/config/excel"
     ports:
+      - "8989:8989"
       - "80:80"
       - "443:443"
     environment:
