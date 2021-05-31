@@ -8,31 +8,30 @@ services:
     #volumes:
       #- "./config/client_bots/:/app/config/client_bots"
       #- "./config/cert/:/app/config/cert"
-      #- "./config/entry/:/app/config/entry"
   
   game:
-    image: mmstudio-docker.pkg.coding.net/blade/server/game
+    image: hellodudu86/game
     container_name: game
     command: "-config_file=config/game/config.toml"
     ports:
       - "7030:7030"
+      - "8080:8080"
     volumes:
       - "./config/game/:/app/server/config/game"
       - "./config/cert/:/app/server/config/cert"
-      - "./config/entry/:/app/server/config/entry"
       - "./config/excel/:/app/server/config/excel"
     environment:
-      MICRO_REGISTRY: "consul"
-      MICRO_REGISTRY_ADDRESS: "consul:8500"
+      MICRO_REGISTRY: "mdns"
+      # MICRO_REGISTRY_ADDRESS: "consul:8500"
       # MICRO_BROKER: "nsq"
       # MICRO_BROKER_ADDRESS: "nsqd:4150"
-      DB_DSN: "mongodb://mongo:27017"
-      REDIS_ADDR: "rejson:6379"
-    depends_on:
-      - "consul"
+      DB_DSN: "mongodb://host.docker.internal:27017"
+      # REDIS_ADDR: "rejson:6379"
+    # depends_on:
+      # - "consul"
       # - "nsqd"
       # - "loki"
-      - "mongo"
+      # - "mongo"
     # logging:
     #   driver: loki
     #   options:
@@ -42,47 +41,30 @@ services:
 
 
   gate:
-    image: mmstudio-docker.pkg.coding.net/blade/server/gate
+    image: hellodudu86/gate
     container_name: gate
     command: "-config_file=config/gate/config.toml"
     volumes:
       - "./config/gate/:/app/server/config/gate"
       - "./config/cert/:/app/server/config/cert"
-      - "./config/entry/:/app/server/config/entry"
       - "./config/excel/:/app/server/config/excel"
     ports:
-      - "8080:8080"
+      - "8989:8989"
       - "80:80"
       - "443:443"
     environment:
-      MICRO_REGISTRY: "consul"
-      MICRO_REGISTRY_ADDRESS: "consul:8500"
+      MICRO_REGISTRY: "mdns"
+      # MICRO_REGISTRY_ADDRESS: "consul:8500"
       # MICRO_BROKER: "nsq"
       # MICRO_BROKER_ADDRESS: "nsqd:4150"
-      MICRO_SYNC_NODE_ADDRESS: "consul:8500"
-      DB_DSN: "mongodb://mongo:27017"
-      REDIS_ADDR: "rejson:6379"
-    depends_on:
-      - "consul"
+      # MICRO_SYNC_NODE_ADDRESS: "consul:8500"
+      DB_DSN: "mongodb://host.docker.internal:27017"
+      # REDIS_ADDR: "rejson:6379"
+    # depends_on:
+      # - "consul"
       # - "nsqd"
       # - "loki"
-      - "mongo"
-    # logging:
-    #   driver: loki
-    #   options:
-    #     loki-url: http://host.docker.internal:3100/api/prom/push
-    #     loki-retries: "5"
-    #     loki-batch-size: "400"
-        
-  mongo:
-    image: mongo
-    container_name: mongo
-    restart: always
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./config/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ./data/database/:/data/db
+      # - "mongo"
     # logging:
     #   driver: loki
     #   options:
@@ -90,22 +72,61 @@ services:
     #     loki-retries: "5"
     #     loki-batch-size: "400"
 
-  rejson:
-    image: redislabs/rejson
-    command: 
-      - /usr/local/etc/redis/redis.conf 
-      - --loadmodule /usr/lib/redis/modules/rejson.so
-    container_name: rejson
+  mail:
+    image: hellodudu86/mail
+    container_name: mail
+    command: "-config_file=config/mail/config.toml"
     ports:
-      - 6379:6379
+      - "8180:8180"
     volumes:
-      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
-      - ./data/redis/:/data
-    healthcheck:
-      test: ["CMD", "redis-cli","ping"]
-      interval: 20s
-      timeout: 1s
-      retries: 20
+      - "./config/mail/:/app/server/config/mail"
+      - "./config/cert/:/app/server/config/cert"
+      - "./config/excel/:/app/server/config/excel"
+    environment:
+      MICRO_REGISTRY: "mdns"
+      # MICRO_REGISTRY_ADDRESS: "consul:8500"
+      # MICRO_BROKER: "nsq"
+      # MICRO_BROKER_ADDRESS: "nsqd:4150"
+      DB_DSN: "mongodb://host.docker.internal:27017"
+      # REDIS_ADDR: "rejson:6379"
+    # depends_on:
+      # - "consul"
+      # - "nsqd"
+      # - "loki"
+      # - "mongo"
+        
+  # mongo:
+  #   image: mongo
+  #   container_name: mongo
+  #   restart: always
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - ./config/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+  #     - ./data/database/:/data/db
+    # logging:
+    #   driver: loki
+    #   options:
+    #     loki-url: http://host.docker.internal:3100/api/prom/push
+    #     loki-retries: "5"
+    #     loki-batch-size: "400"
+
+  # rejson:
+  #   image: redislabs/rejson
+  #   command: 
+  #     - /usr/local/etc/redis/redis.conf 
+  #     - --loadmodule /usr/lib/redis/modules/rejson.so
+  #   container_name: rejson
+  #   ports:
+  #     - 6379:6379
+  #   volumes:
+  #     - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
+  #     - ./data/redis/:/data
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli","ping"]
+  #     interval: 20s
+  #     timeout: 1s
+  #     retries: 20
     # depends_on:
     #   - loki
     # logging:
@@ -115,15 +136,15 @@ services:
     #     loki-retries: "5"
     #     loki-batch-size: "400"
 
-  consul:
-    image: consul
-    command: "agent -server -bootstrap-expect=1 -bind=127.0.0.1 -enable-local-script-checks -log-level=info -config-dir=/config/consul -data-dir=/consul_data -ui -client=0.0.0.0"
-    container_name: consul
-    ports:
-      - "8500:8500"
-    volumes:
-      - "./config/consul/:/config/consul/"
-      - "./data/consul/:/consul_data"
+  # consul:
+  #   image: consul
+  #   command: "agent -server -bootstrap-expect=1 -bind=127.0.0.1 -enable-local-script-checks -log-level=info -config-dir=/config/consul -data-dir=/consul_data -ui -client=0.0.0.0"
+  #   container_name: consul
+  #   ports:
+  #     - "8500:8500"
+  #   volumes:
+  #     - "./config/consul/:/config/consul/"
+  #     - "./data/consul/:/consul_data"
     # depends_on:
     #   - loki
     # logging:
@@ -200,26 +221,26 @@ services:
   #   depends_on:
   #     - grafana
 
-  promtail:
-    image: grafana/promtail
-    container_name: promtail
-    volumes:
-      - ./config/promtail/:/etc/promtail
-      - /var/log:/var/log
-    command:
-      -config.file=/etc/promtail/promtail-docker-config.yaml
+  # promtail:
+  #   image: grafana/promtail
+  #   container_name: promtail
+  #   volumes:
+  #     - ./config/promtail/:/etc/promtail
+  #     - /var/log:/var/log
+  #   command:
+  #     -config.file=/etc/promtail/promtail-docker-config.yaml
 
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
-    volumes:
-        - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
-        - ./data/grafana/:/var/lib/grafana/
-    ports:
-        - "3000:3000"
-    user: "472"
-    environment:
-      GF_EXPLORE_ENABLED: "true"
+  # grafana:
+  #   image: grafana/grafana
+  #   container_name: grafana
+  #   volumes:
+  #       - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
+  #       - ./data/grafana/:/var/lib/grafana/
+  #   ports:
+  #       - "3000:3000"
+  #   user: "472"
+  #   environment:
+  #     GF_EXPLORE_ENABLED: "true"
     # logging:
     #   driver: loki
     #   options:
